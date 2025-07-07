@@ -27,6 +27,8 @@ const fetchWeatherData = async () => {
    
   }catch(error){
     console.error('Error fetching weather data:', error)
+  }finally{
+    setIsLoading(false)
   }
 }
 
@@ -34,20 +36,31 @@ const fetchWeatherData = async () => {
   return (
   <div className="bg-blue-600 h-screen flex flex-col items-center justify-center">
     <div className="bg-white mx-10 p-9 rounded shadow-md mb-6">
-      <h1 className="font-bold mb-4 text-2xl">Weather Application</h1>
+      <h1 className="font-bold mb-4 text-2xl">Weather App</h1>
       <input type="text" placeholder="Enter city name" value={city} className="border rounded p-2 w-full mb-4" onChange={(e) => setCity(e.target.value)}/>
       <button className="bg-blue-600 cursor-pointer p-2 hover:bg-blue-400 transition text-white rounded" onClick={fetchWeatherData}>Get Weather</button>
     </div>
-    {weatherData && (
+    {isLoading && (
+      <div className="text-white font-semibold text-lg animate-pulse">
+    Loading weather...
+  </div>
+    )}
+    {weatherData && !isLoading && (
       <div className="bg-black mx-10 rounded p-8 shadow-md text-white">
           <div className="mt-4">
              <h3 className="font-semibold text-xl">
               Weather in {weatherData.location.name}, {weatherData.location.country}
              </h3>
+             <div className="flex items-center gap-4 mb-4">
+              <img src={weatherData.current.condition.icon} alt="Weather Icon" className="border m-1"/>
+
              <p>Condition: {weatherData.current.condition.text}</p>
+             </div>
+
              <p>Temperature: {weatherData.current.temp_c}°C</p>
              <p>Feels like: {weatherData.current.feelslike_c}°C</p>
              <p>Wind: {weatherData.current.wind_kph} KMH in {weatherData.current.wind_dir} Direction</p>
+            
           </div>
       </div>
     )}
